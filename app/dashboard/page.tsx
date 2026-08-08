@@ -60,13 +60,17 @@ async function loadData() {
 }
 
 return (
-  <main className="p-8">
+  <main className="min-h-screen bg-black text-white p-8">
 
-    <h1 className="text-4xl font-bold mb-6">
-      League Dashboard
-    </h1>
+    <h1 className="text-5xl font-bold mb-2">
+  Draft Board
+</h1>
 
-    <div className="grid grid-cols-3 gap-4">
+<p className="text-gray-400 mb-8">
+  Live Fantasy Football Auction Dashboard
+</p>
+
+    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
 
       {teams.map((team) => (
 
@@ -75,7 +79,7 @@ return (
           className="border border-gray-700 rounded-lg p-4 bg-gray-900"
         >
 
-          <h2 className="text-2xl font-bold mb-4">
+          <h2 className="text-2xl font-bold mb-4 text-blue-400">
             {team.name}
           </h2>
 
@@ -98,13 +102,27 @@ return (
 
   return (
     <>
-      <div>
-        Spent: ${totalSpent}
-      </div>
+      <div className="border border-gray-700 rounded-lg p-3 mb-4">
 
-      <div>
-        Remaining: ${remainingBudget}
-      </div>
+  <div>
+    Budget: ${team.budget}
+  </div>
+
+  <div className="text-red-400">
+    Spent: ${totalSpent}
+  </div>
+
+  <div
+  className={
+    remainingBudget < 25
+      ? "text-red-500 font-bold"
+      : "text-green-400 font-bold"
+  }
+>
+    Remaining: ${remainingBudget}
+  </div>
+
+</div>
     </>
   );
 
@@ -141,25 +159,88 @@ return (
       (p) => p?.position === "WR"
     ).length;
 
+    const teCount =
+  teamPlayers.filter(
+    (p) => p?.position === "TE"
+  ).length;
+
+const dstCount =
+  teamPlayers.filter(
+    (p) => p?.position === "DST"
+  ).length;
+
+const kCount =
+  teamPlayers.filter(
+    (p) => p?.position === "K"
+  ).length;
+
   return (
-    <>
-      <div>QB: {qbCount}</div>
-      <div>RB: {rbCount}</div>
-      <div>WR: {wrCount}</div>
-    </>
-  );
+  <div className="grid grid-cols-3 gap-2 mb-4">
 
-})()}
+    <div className="border border-gray-700 rounded p-2 text-center">
+  QB: {qbCount}
+</div>
 
-<div className="mt-4 font-bold">
-  Players:
+    <div className="border border-gray-700 rounded p-2 text-center">
+  RB: {rbCount}
+</div>
+
+   <div className="border border-gray-700 rounded p-2 text-center">
+  WR: {wrCount}
+</div>
+
+    <div className="border border-gray-700 rounded p-2 text-center">
+  TE: {teCount}
+</div>
+
+   <div className="border border-gray-700 rounded p-2 text-center">
+  DST: {dstCount}
+</div>
+
+   <div className="border border-gray-700 rounded p-2 text-center">
+  K: {kCount}
+</div>
+
+<div className="font-bold mb-4">
+
+  Total Players:
+
   {
     draftPicks.filter(
       (pick) =>
         pick.team_id === team.id
     ).length
   }
+
 </div>
+<div className="text-sm text-gray-400">
+
+  Highest Purchase:
+
+  ${
+    Math.max(
+      0,
+      ...draftPicks
+        .filter(
+          (pick) =>
+            pick.team_id === team.id
+        )
+        .map(
+          (pick) =>
+            pick.cost
+        )
+    )
+  }
+
+</div>
+  </div>
+
+  
+);
+
+})()}
+
+
 
         </div>
 
