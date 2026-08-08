@@ -84,6 +84,43 @@ return (
           {team.name}
         </h2>
 
+        {(() => {
+
+  const totalSpent =
+    draftPicks
+      .filter(
+        (pick) =>
+          pick.team_id === team.id
+      )
+      .reduce(
+        (sum, pick) =>
+          sum + pick.cost,
+        0
+      );
+
+  const remainingBudget =
+  team.budget - totalSpent;
+
+return (
+  <div className="mb-4 border-b pb-3">
+
+    <div>
+      Budget: ${team.budget}
+    </div>
+
+    <div className="text-red-400">
+  Spent: ${totalSpent}
+</div>
+
+    <div className="text-green-400 font-bold">
+  Remaining: ${remainingBudget}
+</div>
+
+  </div>
+);
+
+})()}
+
         {draftPicks
   .filter(
     (pick) =>
