@@ -121,6 +121,90 @@ return (
 
 })()}
 
+{(() => {
+
+  const teamPlayers =
+    draftPicks
+      .filter(
+        (pick) =>
+          pick.team_id === team.id
+      )
+      .map((pick) =>
+        players.find(
+          (p) =>
+            p.id === pick.player_id
+        )
+      )
+      .filter(Boolean);
+
+  const qbCount =
+    teamPlayers.filter(
+      (player) =>
+        player?.position === "QB"
+    ).length;
+
+  const rbCount =
+    teamPlayers.filter(
+      (player) =>
+        player?.position === "RB"
+    ).length;
+
+  const wrCount =
+    teamPlayers.filter(
+      (player) =>
+        player?.position === "WR"
+    ).length;
+
+  const teCount =
+    teamPlayers.filter(
+      (player) =>
+        player?.position === "TE"
+    ).length;
+
+  const dstCount =
+    teamPlayers.filter(
+      (player) =>
+        player?.position === "DST"
+    ).length;
+
+  const kCount =
+    teamPlayers.filter(
+      (player) =>
+        player?.position === "K"
+    ).length;
+
+  return (
+    <div className="mb-4 grid grid-cols-3 gap-2">
+
+      <div className="border rounded p-2">
+        QB: {qbCount}
+      </div>
+
+      <div className="border rounded p-2">
+        RB: {rbCount}
+      </div>
+
+      <div className="border rounded p-2">
+        WR: {wrCount}
+      </div>
+
+      <div className="border rounded p-2">
+        TE: {teCount}
+      </div>
+
+      <div className="border rounded p-2">
+        DST: {dstCount}
+      </div>
+
+      <div className="border rounded p-2">
+        K: {kCount}
+      </div>
+
+    </div>
+  );
+
+})()}
+
         {draftPicks
   .filter(
     (pick) =>
