@@ -34,9 +34,37 @@ const [draftPicks, setDraftPicks] =
 
 const [players, setPlayers] =
   useState<Player[]>([]);
-  useEffect(() => {
+
+ useEffect(() => {
+
   loadData();
+
+  const channel =
+    supabase
+      .channel(
+        "team-updates"
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "draft_picks",
+        },
+        () => {
+          loadData();
+        }
+      )
+      .subscribe();
+
+  return () => {
+    supabase.removeChannel(
+      channel
+    );
+  };
+
 }, []);
+
 async function loadData() {
 
   const teamResult =

@@ -28,9 +28,35 @@ export default function Home() {
   const [selectedTeamId, setSelectedTeamId] = useState("");
 
   useEffect(() => {
-    fetchPlayers();
-    fetchTeams();
-  }, []);
+
+  fetchPlayers();
+  fetchTeams();
+
+  const channel =
+    supabase
+      .channel(
+        "player-updates"
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "players",
+        },
+        () => {
+          fetchPlayers();
+        }
+      )
+      .subscribe();
+
+  return () => {
+    supabase.removeChannel(
+      channel
+    );
+  };
+
+}, []);
 
   async function fetchPlayers() {
     const { data, error } = await supabase

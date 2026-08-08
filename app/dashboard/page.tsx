@@ -34,7 +34,33 @@ const [players, setPlayers] =
   useState<Player[]>([]);
 
   useEffect(() => {
+
   loadData();
+
+  const channel =
+    supabase
+      .channel(
+        "dashboard-updates"
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "draft_picks",
+        },
+        () => {
+          loadData();
+        }
+      )
+      .subscribe();
+
+  return () => {
+    supabase.removeChannel(
+      channel
+    );
+  };
+
 }, []);
 
 async function loadData() {

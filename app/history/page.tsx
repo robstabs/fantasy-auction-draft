@@ -32,8 +32,34 @@ export default function HistoryPage() {
     useState<Team[]>([]);
 
   useEffect(() => {
-    loadData();
-  }, []);
+
+  loadData();
+
+  const channel =
+    supabase
+      .channel(
+        "history-updates"
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "draft_picks",
+        },
+        () => {
+          loadData();
+        }
+      )
+      .subscribe();
+
+  return () => {
+    supabase.removeChannel(
+      channel
+    );
+  };
+
+}, []);
 
   async function loadData() {
     const draftResult =
