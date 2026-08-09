@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { supabase } from "../lib/supabase";
 
 type Player = {
@@ -329,9 +330,37 @@ async function markPlayerDrafted() {
 
   return (
     <main className="min-h-screen bg-black text-white p-8">
-      <h1 className="text-4xl font-bold mb-6">
-        Available Players
-      </h1>
+     <h1 className="text-4xl font-bold mb-6">
+  Available Players
+</h1>
+
+<div className="flex flex-wrap gap-3 mb-6">
+
+  <Link
+    href="/dashboard"
+    className="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-lg"
+  >
+    Dashboard
+  </Link>
+
+  <Link
+    href="/team"
+    className="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-lg"
+  >
+    Teams
+  </Link>
+
+  <Link
+    href="/history"
+    className="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-lg"
+  >
+    History
+  </Link>
+
+</div>
+
+    
+
 
       <p className="mb-6">
         Players Found: {filteredPlayers.length}
