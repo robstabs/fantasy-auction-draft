@@ -205,97 +205,185 @@ return (
       )
       .filter(Boolean);
 
-  const qbCount =
-    teamPlayers.filter(
-      (player) =>
-        player?.position === "QB"
-    ).length;
+      const qbs =
+  teamPlayers.filter(
+    (player) =>
+      player?.position === "QB"
+  );
 
-  const rbCount =
-    teamPlayers.filter(
-      (player) =>
-        player?.position === "RB"
-    ).length;
+const rbs =
+  teamPlayers.filter(
+    (player) =>
+      player?.position === "RB"
+  );
 
-  const wrCount =
-    teamPlayers.filter(
-      (player) =>
-        player?.position === "WR"
-    ).length;
+const wrs =
+  teamPlayers.filter(
+    (player) =>
+      player?.position === "WR"
+  );
 
-  const teCount =
-    teamPlayers.filter(
-      (player) =>
-        player?.position === "TE"
-    ).length;
+const tes =
+  teamPlayers.filter(
+    (player) =>
+      player?.position === "TE"
+  );
 
-  const dstCount =
-    teamPlayers.filter(
-      (player) =>
-        player?.position === "DST"
-    ).length;
+const dsts =
+  teamPlayers.filter(
+    (player) =>
+      player?.position === "DST"
+  );
 
-  const kCount =
-    teamPlayers.filter(
-      (player) =>
-        player?.position === "K"
-    ).length;
+const ks =
+  teamPlayers.filter(
+    (player) =>
+      player?.position === "K"
+  );
+
+  const starterQB =
+  qbs[0];
+
+const starterRB1 =
+  rbs[0];
+
+const starterRB2 =
+  rbs[1];
+
+const starterWR1 =
+  wrs[0];
+
+const starterWR2 =
+  wrs[1];
+
+const starterTE =
+  tes[0];
+
+const starterDST =
+  dsts[0];
+
+const starterK =
+  ks[0];
+
+  const flexPool = [
+  ...rbs.slice(2),
+  ...wrs.slice(2),
+  ...tes.slice(1),
+];
+
+const starterFlex =
+  flexPool[0];
+
+  const benchPlayers =
+  teamPlayers.filter(
+    (player) =>
+      ![
+        starterQB,
+        starterRB1,
+        starterRB2,
+        starterWR1,
+        starterWR2,
+        starterTE,
+        starterFlex,
+        starterDST,
+        starterK
+      ].includes(player)
+  );
+
+ 
 
   return (
-    <div className="mb-4 grid grid-cols-3 gap-2">
+  <>
 
-      <div className="border rounded p-2">
-        QB: {qbCount}
-      </div>
+    <div className="border border-gray-700 rounded-lg p-4 mb-4 bg-gray-900">
 
-      <div className="border rounded p-2">
-        RB: {rbCount}
-      </div>
+      <h3 className="font-bold mb-2">
+        Starting Lineup
+      </h3>
 
-      <div className="border rounded p-2">
-        WR: {wrCount}
-      </div>
+      <div className="space-y-2">
 
-      <div className="border rounded p-2">
-        TE: {teCount}
-      </div>
+  <div className="flex">
+    <span className="w-16 font-bold">QB</span>
+    <span>{starterQB?.player_name || ""}</span>
+  </div>
 
-      <div className="border rounded p-2">
-        DST: {dstCount}
-      </div>
+  <div className="flex">
+    <span className="w-16 font-bold">RB1</span>
+    <span>{starterRB1?.player_name || ""}</span>
+  </div>
 
-      <div className="border rounded p-2">
-        K: {kCount}
-      </div>
+  <div className="flex">
+    <span className="w-16 font-bold">RB2</span>
+    <span>{starterRB2?.player_name || ""}</span>
+  </div>
+
+  <div className="flex">
+    <span className="w-16 font-bold">WR1</span>
+    <span>{starterWR1?.player_name || ""}</span>
+  </div>
+
+  <div className="flex">
+    <span className="w-16 font-bold">WR2</span>
+    <span>{starterWR2?.player_name || ""}</span>
+  </div>
+
+  <div className="flex">
+    <span className="w-16 font-bold">TE</span>
+    <span>{starterTE?.player_name || ""}</span>
+  </div>
+
+  <div className="flex">
+    <span className="w-16 font-bold">FLEX</span>
+    <span>{starterFlex?.player_name || ""}</span>
+  </div>
+
+  <div className="flex">
+    <span className="w-16 font-bold">DST</span>
+    <span>{starterDST?.player_name || ""}</span>
+  </div>
+
+  <div className="flex">
+    <span className="w-16 font-bold">K</span>
+    <span>{starterK?.player_name || ""}</span>
+  </div>
+
+</div>
+           
 
     </div>
-  );
+
+    <div className="mt-4 mb-4">
+
+      <h3 className="font-bold">
+        Bench
+      </h3>
+
+      <div className="space-y-1">
+
+  {benchPlayers.map((player) => (
+    <div
+      key={player?.id}
+      className="pl-2"
+    >
+      {player?.player_name}
+    </div>
+  ))}
+
+</div>
+
+    </div>
+
+    
+
+  </>
+);
+
+   
 
 })()}
 
-        {draftPicks
-  .filter(
-    (pick) =>
-      pick.team_id === team.id
-  )
-  .map((pick) => {
-
-    const player =
-      players.find(
-        (p) =>
-          p.id === pick.player_id
-      );
-
-    return (
-
-      <div key={pick.id}>
-        {player?.player_name}
-        {" - $"}
-        {pick.cost}
-      </div>
-
-    );
-  })}
+       
 
       </div>
 

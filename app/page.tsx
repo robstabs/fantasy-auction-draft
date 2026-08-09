@@ -70,7 +70,7 @@ export default function Home() {
     const { data, error } = await supabase
       .from("players")
       .select("*")
-      .order("player_name");
+      .order("id");
 
     if (error) {
       console.error(error);

@@ -117,6 +117,52 @@ export default function HistoryPage() {
                 t.id === pick.team_id
             );
 
+            async function undoDraftPick(
+  pickId: number,
+  playerId: number
+) {
+
+    const playerUpdate =
+  await supabase
+    .from("players")
+    .update({
+      drafted: false
+    })
+    .eq(
+      "id",
+      playerId
+    );
+
+    if (playerUpdate.error) {
+
+  console.error(
+    playerUpdate.error
+  );
+
+  return;
+}
+
+const draftDelete =
+  await supabase
+    .from("draft_picks")
+    .delete()
+    .eq(
+      "id",
+      pickId
+    );
+
+    if (draftDelete.error) {
+
+  console.error(
+    draftDelete.error
+  );
+
+  return;
+}
+
+loadData();
+}
+
           return (
 
             <div
@@ -151,6 +197,36 @@ export default function HistoryPage() {
                   pick.drafted_at
                 ).toLocaleString()}
               </div>
+
+              <button
+  onClick={() => {
+
+  const confirmed =
+    confirm(
+      "Undo this draft pick?"
+    );
+
+  if (!confirmed)
+    return;
+
+  undoDraftPick(
+    pick.id,
+    pick.player_id
+  );
+
+}}
+  className="
+    mt-2
+    border
+    border-red-500
+    text-red-400
+    px-2
+    py-1
+    rounded
+  "
+>
+  Undo Draft Pick
+</button>
 
             </div>
 
