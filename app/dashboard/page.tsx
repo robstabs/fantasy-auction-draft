@@ -106,7 +106,7 @@ return (
 </h1>
 
 <p className="text-gray-400 mb-8">
-  Live Fantasy Football Auction Dashboard
+  Boner's Big Board Summary
 </p>
 
     <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -118,7 +118,7 @@ return (
           className="border border-gray-700 rounded-lg p-4 bg-gray-900"
         >
 
-          <h2 className="text-2xl font-bold mb-4 text-blue-400">
+          <h2 className="text-2xl font-bold mb-4 text-gray-400">
             {team.name}
           </h2>
 
@@ -164,25 +164,25 @@ return (
     <>
       <div className="border border-gray-700 rounded-lg p-3 mb-4">
 
-  <div>
+  <div className ="text-gray-400">
     Budget: ${team.budget}
   </div>
 
-  <div className="text-red-400">
+  <div className="text-rose-700">
     Spent: ${totalSpent}
   </div>
 
   <div
   className={
     remainingBudget < 25
-      ? "text-red-500 font-bold"
-      : "text-green-400 font-bold"
+      ? "text-green-700 font"
+      : "text-green-700 font"
   }
 >
     Remaining: ${remainingBudget}
   </div>
 
-  <div className="text-yellow-400 font-bold">
+  <div className="text-yellow-600 font">
   Max Bid: ${maxBid}
 </div>
 
@@ -265,7 +265,7 @@ const kCount =
   K: {kCount}
 </div>
 
-<div className="font-bold mb-4">
+<div className="font mb-4">
 
   Total Players:
 

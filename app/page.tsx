@@ -415,7 +415,18 @@ async function markPlayerDrafted() {
 
             <button
   onClick={() => setSelectedPlayer(player)}
-  className="mt-2 px-3 py-1 border rounded-lg"
+  className="
+    mt-2
+    px-4
+    py-2
+    bg-emerald-800
+    hover:bg-emerald-900
+    text-white
+    font-bold
+    rounded-lg
+    shadow-md
+    transition-colors
+  "
 >
   Draft Player
 </button>
@@ -482,20 +493,41 @@ async function markPlayerDrafted() {
       />
 
       <button
-      onClick={saveDraftPick}
-        className="border px-4 py-2 mr-2"
-      >
-        Save Draft Pick
-      </button>
+  onClick={saveDraftPick}
+  className="
+    px-4
+    py-2
+    mr-2
+    bg-emerald-800
+    hover:bg-emerald-900
+    text-white
+    font-bold
+    rounded-lg
+    shadow-md
+    transition-colors
+  "
+>
+  Save Draft Pick
+</button>
 
       <button
-        onClick={() =>
-          setSelectedPlayer(null)
-        }
-        className="border px-4 py-2"
-      >
-        Cancel
-      </button>
+  onClick={() =>
+    setSelectedPlayer(null)
+  }
+  className="
+    px-4
+    py-2
+    bg-rose-800
+    hover:bg-rose-900
+    text-white
+    font-bold
+    rounded-lg
+    shadow-md
+    transition-colors
+  "
+>
+  Cancel
+</button>
 
     </div>
   </div>

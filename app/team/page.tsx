@@ -39,6 +39,10 @@ const [players, setPlayers] =
   setLeagueSettings] =
   useState<any>(null);
 
+  const [selectedTeam,
+  setSelectedTeam] =
+  useState("ALL");
+
  useEffect(() => {
 
   loadData();
@@ -115,16 +119,65 @@ return (
     <h1 className="text-4xl font-bold mb-6">
       Teams
     </h1>
+<select
+  value={selectedTeam}
+  onChange={(e) =>
+    setSelectedTeam(
+      e.target.value
+    )
+  }
+  className="
+    border
+    border-gray-700
+    bg-gray-900
+    text-white
+    p-2
+    rounded-lg
+    mb-6
+  "
+>
+
+  <option value="ALL">
+    All Teams
+  </option>
+
+  {teams.map((team) => (
+
+    <option
+      key={team.id}
+      value={team.id}
+    >
+      {team.name}
+    </option>
+
+  ))}
 
 
-    {teams.map((team) => (
+
+</select>
+
+
+    {teams
+  .filter((team) =>
+
+    selectedTeam === "ALL"
+
+      ? true
+
+      : team.id ===
+        Number(
+          selectedTeam
+        )
+
+  )
+  .map((team) => (
 
       <div
         key={team.id}
         className="border rounded-lg p-4 mb-6"
       >
 
-        <h2 className="text-2xl font-bold mb-4">
+        <h2 className="text-2xl font mb-4">
           {team.name}
         </h2>
 
@@ -171,16 +224,16 @@ return (
       Budget: ${team.budget}
     </div>
 
-    <div className="text-red-400">
+    <div className="text-rose-700">
   Spent: ${totalSpent}
 </div>
 
-    <div className="text-green-400 font-bold">
+    <div className="text-green-700 font">
   Remaining: ${remainingBudget}
 </div>
 
 
-<div className="text-yellow-400 font-bold">
+<div className="text-yellow-600 font">
   Max Bid: ${maxBid}
 </div>
 
@@ -192,18 +245,24 @@ return (
 {(() => {
 
   const teamPlayers =
-    draftPicks
-      .filter(
-        (pick) =>
-          pick.team_id === team.id
-      )
-      .map((pick) =>
-        players.find(
-          (p) =>
-            p.id === pick.player_id
-        )
-      )
-      .filter(Boolean);
+  draftPicks
+    .filter(
+      (pick) =>
+        pick.team_id === team.id
+    )
+    .map((pick) => {
+      const player = players.find(
+        (p) => p.id === pick.player_id
+      );
+
+      return player
+        ? {
+            ...player,
+            cost: pick.cost
+          }
+        : null;
+    })
+    .filter(Boolean);
 
       const qbs =
   teamPlayers.filter(
@@ -244,11 +303,8 @@ const ks =
   const starterQB =
   qbs[0];
 
-const starterRB1 =
+const starterRB =
   rbs[0];
-
-const starterRB2 =
-  rbs[1];
 
 const starterWR1 =
   wrs[0];
@@ -266,25 +322,28 @@ const starterK =
   ks[0];
 
   const flexPool = [
-  ...rbs.slice(2),
+  ...rbs.slice(1),
   ...wrs.slice(2),
   ...tes.slice(1),
 ];
 
-const starterFlex =
+const starterFlex1 =
   flexPool[0];
+
+  const starterFlex2 = 
+    flexPool[1];
 
   const benchPlayers =
   teamPlayers.filter(
     (player) =>
       ![
         starterQB,
-        starterRB1,
-        starterRB2,
+        starterRB,
         starterWR1,
         starterWR2,
         starterTE,
-        starterFlex,
+        starterFlex1,
+        starterFlex2,
         starterDST,
         starterK
       ].includes(player)
@@ -305,47 +364,83 @@ const starterFlex =
 
   <div className="flex">
     <span className="w-16 font-bold">QB</span>
-    <span>{starterQB?.player_name || ""}</span>
+    <span>
+      {starterQB
+         ? `${starterQB.player_name} - $${starterQB.cost}`
+         : ""}
+     </span>
   </div>
 
   <div className="flex">
-    <span className="w-16 font-bold">RB1</span>
-    <span>{starterRB1?.player_name || ""}</span>
-  </div>
-
-  <div className="flex">
-    <span className="w-16 font-bold">RB2</span>
-    <span>{starterRB2?.player_name || ""}</span>
+    <span className="w-16 font-bold">RB</span>
+    <span>
+  {starterRB
+    ? `${starterRB.player_name} - $${starterRB.cost}`
+    : ""}
+</span>
   </div>
 
   <div className="flex">
     <span className="w-16 font-bold">WR1</span>
-    <span>{starterWR1?.player_name || ""}</span>
+    <span>
+  {starterWR1
+    ? `${starterWR1.player_name} - $${starterWR1.cost}`
+    : ""}
+</span>
   </div>
 
   <div className="flex">
     <span className="w-16 font-bold">WR2</span>
-    <span>{starterWR2?.player_name || ""}</span>
+    <span>
+  {starterWR2
+    ? `${starterWR2.player_name} - $${starterWR2.cost}`
+    : ""}
+</span>
   </div>
 
   <div className="flex">
     <span className="w-16 font-bold">TE</span>
-    <span>{starterTE?.player_name || ""}</span>
+    <span>
+  {starterTE
+    ? `${starterTE.player_name} - $${starterTE.cost}`
+    : ""}
+</span>
   </div>
 
   <div className="flex">
-    <span className="w-16 font-bold">FLEX</span>
-    <span>{starterFlex?.player_name || ""}</span>
+    <span className="w-16 font-bold">Flex1</span>
+    <span>
+  {starterFlex1
+    ? `${starterFlex1.player_name} - $${starterFlex1.cost}`
+    : ""}
+</span>
+  </div>
+
+   <div className="flex">
+    <span className="w-16 font-bold">Flex2</span>
+     <span>
+  {starterFlex2
+    ? `${starterFlex2.player_name} - $${starterFlex2.cost}`
+    : ""}
+</span>
   </div>
 
   <div className="flex">
     <span className="w-16 font-bold">DST</span>
-    <span>{starterDST?.player_name || ""}</span>
+    <span>
+  {starterDST
+    ? `${starterDST.player_name} - $${starterDST.cost}`
+    : ""}
+</span>
   </div>
 
   <div className="flex">
     <span className="w-16 font-bold">K</span>
-    <span>{starterK?.player_name || ""}</span>
+    <span>
+  {starterK
+    ? `${starterK.player_name} - $${starterK.cost}`
+    : ""}
+</span>
   </div>
 
 </div>
@@ -361,14 +456,33 @@ const starterFlex =
 
       <div className="space-y-1">
 
-  {benchPlayers.map((player) => (
-    <div
-      key={player?.id}
-      className="pl-2"
-    >
+  {benchPlayers.map((player) => {
+
+  const draftPick =
+    draftPicks.find(
+      (pick) =>
+        pick.player_id === player?.id
+    );
+
+  return (
+
+    <div key={player?.id}>
+
+      {player?.position}
+
+      {" - "}
+
       {player?.player_name}
+
+      {" - $"}
+
+      {draftPick?.cost}
+
     </div>
-  ))}
+
+  );
+
+})}
 
 </div>
 
