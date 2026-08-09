@@ -17,9 +17,17 @@ type Team = {
   budget: number;
 };
 
+type DraftPick = {
+  player_id: number;
+  team_id: number;
+  cost: number;
+};
+
 export default function Home() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
+  const [draftPicks, setDraftPicks] = useState<DraftPick[]>([]);
+  const [leagueSettings, setLeagueSettings] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPosition, setSelectedPosition] = useState("ALL");
   const [selectedTeam, setSelectedTeam] = useState("ALL");
@@ -77,11 +85,79 @@ export default function Home() {
       .select("*")
       .order("name");
 
+      const draftPickResult =
+  await supabase
+    .from("draft_picks")
+    .select("*");
+
+
+    const settingsResult =
+  await supabase
+    .from("league_settings")
+    .select("*")
+    .single();  
+
   if (error) {
     console.error(error);
   } else {
     setTeams(data || []);
+
+setDraftPicks(
+  draftPickResult.data || []
+);
+
+    setLeagueSettings(
+  settingsResult.data
+);
   }
+}
+
+function calculateMaxBid(
+  teamId: number
+) {
+
+  if (!leagueSettings)
+    return 0;
+
+  const team =
+    teams.find(
+      (t) =>
+        t.id === teamId
+    );
+
+  if (!team)
+    return 0;
+
+  const totalSpent =
+    draftPicks
+      .filter(
+        (pick) =>
+          pick.team_id === teamId
+      )
+      .reduce(
+        (sum, pick) =>
+          sum + pick.cost,
+        0
+      );
+
+  const remainingBudget =
+    team.budget - totalSpent;
+
+  const rosterCount =
+    draftPicks.filter(
+      (pick) =>
+        pick.team_id === teamId
+    ).length;
+
+  const remainingRosterSpots =
+    leagueSettings.roster_size -
+    rosterCount;
+
+  return Math.max(
+    1,
+    remainingBudget -
+      (remainingRosterSpots - 1)
+  );
 }
 
 async function saveDraftPick() {
@@ -96,6 +172,81 @@ async function saveDraftPick() {
     );
     return;
   }
+
+  const selectedTeamRecord =
+  teams.find(
+    (team) =>
+      team.id ===
+      Number(selectedTeamId)
+  );
+  const totalSpent =
+  draftPicks
+    .filter(
+      (pick) =>
+        pick.team_id ===
+        Number(selectedTeamId)
+    )
+    .reduce(
+      (sum, pick) =>
+        sum + pick.cost,
+      0
+    );
+
+    const remainingBudget =
+  selectedTeamRecord!.budget -
+  totalSpent;
+
+  const playerCount =
+  draftPicks.filter(
+    (pick) =>
+      pick.team_id ===
+      Number(selectedTeamId)
+  ).length;
+
+  const remainingRosterSpots =
+  leagueSettings
+    ? leagueSettings.roster_size -
+      playerCount
+    : 0;
+
+    const maxBid =
+  Math.max(
+    1,
+    remainingBudget -
+      (remainingRosterSpots - 1)
+  );
+
+  if (
+  Number(draftCost) > maxBid
+) {
+
+  alert(
+    `${selectedTeamRecord?.name}
+can only bid up to
+$${maxBid}.`
+  );
+
+  return;
+}
+
+  const { data: playerCheck } =
+  await supabase
+    .from("players")
+    .select("*")
+    .eq(
+      "id",
+      selectedPlayer.id
+    )
+    .single();
+
+    if (playerCheck?.drafted) {
+
+  alert(
+    "Player has already been drafted."
+  );
+
+  return;
+}
 
   const { error } =
     await supabase
@@ -305,6 +456,20 @@ async function markPlayerDrafted() {
           </option>
         ))}
       </select>
+
+      {selectedTeamId && (
+
+  <div className="text-yellow-400 font-bold mb-4">
+
+    Max Bid: $
+
+    {calculateMaxBid(
+      Number(selectedTeamId)
+    )}
+
+  </div>
+
+)}
 
       <input
         type="number"

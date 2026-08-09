@@ -35,6 +35,10 @@ const [draftPicks, setDraftPicks] =
 const [players, setPlayers] =
   useState<Player[]>([]);
 
+  const [leagueSettings,
+  setLeagueSettings] =
+  useState<any>(null);
+
  useEffect(() => {
 
   loadData();
@@ -82,6 +86,12 @@ async function loadData() {
       .from("players")
       .select("*");
 
+  const settingsResult = 
+    await supabase
+      .from("league_settings")
+      .select("*")
+      .single();
+
   setTeams(
     teamResult.data || []
   );
@@ -93,6 +103,11 @@ async function loadData() {
   setPlayers(
     playerResult.data || []
   );
+
+  setLeagueSettings(
+  settingsResult.data
+);
+
 }
 return (
   <main className="p-8">
@@ -100,6 +115,7 @@ return (
     <h1 className="text-4xl font-bold mb-6">
       Teams
     </h1>
+
 
     {teams.map((team) => (
 
@@ -129,6 +145,25 @@ return (
   const remainingBudget =
   team.budget - totalSpent;
 
+  const playerCount =
+  draftPicks.filter(
+    (pick) =>
+      pick.team_id === team.id
+  ).length;
+
+  const remainingRosterSpots =
+  leagueSettings
+    ? leagueSettings.roster_size -
+      playerCount
+    : 0;
+   
+    const maxBid =
+  Math.max(
+    1,
+    remainingBudget -
+      (remainingRosterSpots - 1)
+  );
+
 return (
   <div className="mb-4 border-b pb-3">
 
@@ -142,6 +177,11 @@ return (
 
     <div className="text-green-400 font-bold">
   Remaining: ${remainingBudget}
+</div>
+
+
+<div className="text-yellow-400 font-bold">
+  Max Bid: ${maxBid}
 </div>
 
   </div>
