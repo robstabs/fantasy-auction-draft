@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import link from "next/link";
 import { supabase } from "../../lib/supabase";
 type Team = {
   id: number;
@@ -102,12 +103,22 @@ return (
   <main className="min-h-screen bg-black text-white p-8">
 
     <h1 className="text-5xl font-bold mb-2">
-  Draft Board
+  Draft Overview
 </h1>
 
 <p className="text-gray-400 mb-8">
   Another Football Season's Big Board
 </p>
+
+<div className="flex flex-wrap gap-3 mb-6">
+
+  <Link
+    href="/"
+    className
+    href="/dashboard"
+    className="px-4 py-2 bg-blue-700 classnk
+    href="/history"
+    className="px-4 py-2 bg-slate-700
 
     <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
 
