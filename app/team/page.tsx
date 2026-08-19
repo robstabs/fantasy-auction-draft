@@ -376,18 +376,18 @@ const starterFlex1 =
   
   
   <div className="flex">
-    <span className="w-16 font-bold">RB</span>
+    <span className="w-16 font-bold">RB1</span>
     <span>
-  {starterRB
+  {starterRB1
     ? `${starterRB1.player_name} - $${starterRB1.cost}`
     : ""}
 </span>
   </div>
 
   <div className="flex">
-    <span className="w-16 font-bold">RB</span>
+    <span className="w-16 font-bold">RB2</span>
     <span>
-  {starterRB
+  {starterRB2
     ? `${starterRB2.player_name} - $${starterRB2.cost}`
     : ""}
 </span>
