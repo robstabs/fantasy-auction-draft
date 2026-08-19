@@ -422,7 +422,7 @@ async function markPlayerDrafted() {
   <option value="GB">GB</option>
   <option value="HOU">HOU</option>
   <option value="IND">IND</option>
-  <option value="JAX">JAC</option>
+  <option value="JAC">JAC</option>
   <option value="KC">KC</option>
   <option value="LV">LV</option>
   <option value="LAC">LAC</option>
