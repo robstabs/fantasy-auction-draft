@@ -106,7 +106,7 @@ return (
 </h1>
 
 <p className="text-gray-400 mb-8">
-  Boner's Big Board Summary
+  Another Football Season's Big Board
 </p>
 
     <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
