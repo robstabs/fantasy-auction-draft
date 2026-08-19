@@ -346,7 +346,7 @@ const starterRB1 =
   rbs[0];
 
 const starterRB2 =
-  rbs[0];
+  rbs[1];
   
 const starterWR1 =
   wrs[0];
@@ -364,7 +364,7 @@ const starterK =
   ks[0];
 
   const flexPool = [
-  ...rbs.slice(1),
+  ...rbs.slice(2),
   ...wrs.slice(2),
   ...tes.slice(1),
 ];
