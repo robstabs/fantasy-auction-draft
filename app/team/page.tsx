@@ -303,9 +303,12 @@ const ks =
   const starterQB =
   qbs[0];
 
-const starterRB =
+const starterRB1 =
   rbs[0];
 
+const starterRB2 =
+  rbs[0];
+  
 const starterWR1 =
   wrs[0];
 
@@ -330,20 +333,19 @@ const starterK =
 const starterFlex1 =
   flexPool[0];
 
-  const starterFlex2 = 
-    flexPool[1];
+
 
   const benchPlayers =
   teamPlayers.filter(
     (player) =>
       ![
         starterQB,
-        starterRB,
+        starterRB1,
+        starterRB2,
         starterWR1,
         starterWR2,
         starterTE,
         starterFlex1,
-        starterFlex2,
         starterDST,
         starterK
       ].includes(player)
@@ -371,11 +373,22 @@ const starterFlex1 =
      </span>
   </div>
 
+  
+  
   <div className="flex">
     <span className="w-16 font-bold">RB</span>
     <span>
   {starterRB
-    ? `${starterRB.player_name} - $${starterRB.cost}`
+    ? `${starterRB1.player_name} - $${starterRB1.cost}`
+    : ""}
+</span>
+  </div>
+
+  <div className="flex">
+    <span className="w-16 font-bold">RB</span>
+    <span>
+  {starterRB
+    ? `${starterRB2.player_name} - $${starterRB2.cost}`
     : ""}
 </span>
   </div>
@@ -416,14 +429,6 @@ const starterFlex1 =
 </span>
   </div>
 
-   <div className="flex">
-    <span className="w-16 font-bold">Flex2</span>
-     <span>
-  {starterFlex2
-    ? `${starterFlex2.player_name} - $${starterFlex2.cost}`
-    : ""}
-</span>
-  </div>
 
   <div className="flex">
     <span className="w-16 font-bold">DST</span>
