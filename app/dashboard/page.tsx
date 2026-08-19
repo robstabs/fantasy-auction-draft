@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import link from "next/link";
+import Link from "next/link";
 import { supabase } from "../../lib/supabase";
 type Team = {
   id: number;
@@ -100,25 +100,47 @@ async function loadData() {
 }
 
 return (
-  <main className="min-h-screen bg-black text-white p-8">
+   <main className="p-8">
 
-    <h1 className="text-5xl font-bold mb-2">
-  Draft Overview
+    <h1 className="text-4xl font-bold mb-6">
+  Dashboard
 </h1>
 
 <p className="text-gray-400 mb-8">
-  Another Football Season's Big Board
+  AFS Team Overview
 </p>
 
 <div className="flex flex-wrap gap-3 mb-6">
 
   <Link
     href="/"
-    className
+    className="px-4 py-2 bg-slate-700 hover:bg-slate-800 text-white font-bold rounded-lg"
+  >
+    Players
+  </Link>
+
+  <Link
     href="/dashboard"
-    className="px-4 py-2 bg-blue-700 classnk
+    className="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-lg"
+  >
+    Dashboard
+  </Link>
+
+  <Link
+    href="/team"
+    className="px-4 py-2 bg-slate-700 hover:bg-slate-800 text-white font-bold rounded-lg"
+  >
+    Teams
+  </Link>
+
+  <Link
     href="/history"
-    className="px-4 py-2 bg-slate-700
+    className="px-4 py-2 bg-slate-700 hover:bg-slate-800 text-white font-bold rounded-lg"
+  >
+    History
+  </Link>
+
+</div>
 
     <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
 
