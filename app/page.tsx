@@ -35,11 +35,14 @@ export default function Home() {
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
   const [draftCost, setDraftCost] = useState("");
   const [selectedTeamId, setSelectedTeamId] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [  lastDraft,  setLastDraft] = useState<any>(null);
 
   useEffect(() => {
 
   fetchPlayers();
   fetchTeams();
+  fetchDraftPicks();
 
   const channel =
     supabase
@@ -79,6 +82,28 @@ export default function Home() {
       setPlayers(data || []);
     }
   }
+
+  async function fetchDraftPicks() {
+
+  const { data, error } =
+    await supabase
+      .from("draft_picks")
+      .select("*");
+
+  if (error) {
+
+    console.error(error);
+
+  } else {
+
+    setDraftPicks(
+      data || []
+    );
+
+  }
+
+}
+
   async function fetchTeams() {
   const { data, error } =
     await supabase
@@ -279,15 +304,29 @@ $${maxBid}.`
 
   await fetchPlayers();
 
+  await fetchDraftPicks();
+
+  setLastDraft({
+  player:
+    selectedPlayer.player_name,
+
+  team:
+    selectedTeamRecord?.name,
+
+  cost:
+    draftCost
+});
+
+  setShowSuccessModal(true);
+
+
   setSelectedPlayer(null);
 
   setDraftCost("");
 
   setSelectedTeamId("");
 
-  alert(
-    "Draft pick saved successfully!"
-  );
+
 }
 
 async function markPlayerDrafted() {
@@ -506,6 +545,9 @@ async function markPlayerDrafted() {
             {team.name}
           </option>
         ))}
+
+
+
       </select>
 
       {selectedTeamId && (
@@ -571,6 +613,55 @@ async function markPlayerDrafted() {
 
     </div>
   </div>
+)}
+
+{showSuccessModal && (
+
+  <div className="fixed inset-0 bg-black/80 flex items-center justify-center">
+
+    <div className="bg-black text-white p-6 rounded-lg w-96 border border-emerald-700">
+
+      <h2 className="text-2xl font-bold text-emerald-400 mb-4">
+        ✅ Draft Pick Saved
+      </h2>
+
+      <div className="space-y-2 mb-6">
+
+        <div>
+          Player: {lastDraft?.player}
+        </div>
+
+        <div>
+          Team: {lastDraft?.team}
+        </div>
+
+        <div>
+          Cost: ${lastDraft?.cost}
+        </div>
+
+      </div>
+
+      <button
+        onClick={() =>
+          setShowSuccessModal(false)
+        }
+        className="
+          px-4
+          py-2
+          bg-emerald-800
+          hover:bg-emerald-900
+          text-white
+          font-bold
+          rounded-lg
+        "
+      >
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
 )}
     </main>
   );

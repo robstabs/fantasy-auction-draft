@@ -33,6 +33,16 @@ export default function HistoryPage() {
   const [teams, setTeams] =
     useState<Team[]>([]);
 
+    const [
+  showUndoModal,
+  setShowUndoModal
+] = useState(false);
+
+const [
+  selectedPick,
+  setSelectedPick
+] = useState<any>(null);
+
   useEffect(() => {
 
   loadData();
@@ -176,6 +186,70 @@ function exportLeague() {
   );
 
 }
+async function confirmUndo() {
+
+  if (!selectedPick)
+    return;
+
+  await undoDraftPick(
+    selectedPick.id,
+    selectedPick.playerId
+  );
+
+  setShowUndoModal(false);
+
+  setSelectedPick(null);
+
+}
+
+async function undoDraftPick(
+  pickId: number,
+  playerId: number
+) {
+
+  const playerUpdate =
+    await supabase
+      .from("players")
+      .update({
+        drafted: false
+      })
+      .eq(
+        "id",
+        playerId
+      );
+
+  if (playerUpdate.error) {
+
+    console.error(
+      playerUpdate.error
+    );
+
+    return;
+  }
+
+  const draftDelete =
+    await supabase
+      .from("draft_picks")
+      .delete()
+      .eq(
+        "id",
+        pickId
+      );
+
+  if (draftDelete.error) {
+
+    console.error(
+      draftDelete.error
+    );
+
+    return;
+  }
+
+  loadData();
+
+}
+
+ 
 
   return (
      <main className="p-8">
@@ -233,7 +307,7 @@ function exportLeague() {
     rounded-lg
   "
 >
-  Export League
+  Export Final Rosters
 </button>
   
 
@@ -241,65 +315,19 @@ function exportLeague() {
 
         {draftPicks.map((pick) => {
 
-          const player =
-            players.find(
-              (p) =>
-                p.id === pick.player_id
-            );
-
-          const team =
-            teams.find(
-              (t) =>
-                t.id === pick.team_id
-            );
-
-            async function undoDraftPick(
-  pickId: number,
-  playerId: number
-) {
-
-    const playerUpdate =
-  await supabase
-    .from("players")
-    .update({
-      drafted: false
-    })
-    .eq(
-      "id",
-      playerId
+  const player =
+    players.find(
+      (p) =>
+        p.id === pick.player_id
     );
 
-    if (playerUpdate.error) {
-
-  console.error(
-    playerUpdate.error
-  );
-
-  return;
-}
-
-const draftDelete =
-  await supabase
-    .from("draft_picks")
-    .delete()
-    .eq(
-      "id",
-      pickId
+  const team =
+    teams.find(
+      (t) =>
+        t.id === pick.team_id
     );
 
-    if (draftDelete.error) {
-
-  console.error(
-    draftDelete.error
-  );
-
-  return;
-}
-
-loadData();
-}
-
-          return (
+  return (
 
             <div
               key={pick.id}
@@ -335,31 +363,31 @@ loadData();
               </div>
 
               <button
+  
   onClick={() => {
 
-  const confirmed =
-    confirm(
-      "Undo this draft pick?"
-    );
+ setSelectedPick({
+  id: pick.id,
+  playerId: pick.player_id,
+  playerName: player?.player_name,
+  teamName: team?.name,
+  cost: pick.cost
+});
 
-  if (!confirmed)
-    return;
-
-  undoDraftPick(
-    pick.id,
-    pick.player_id
-  );
+  setShowUndoModal(true);
 
 }}
+
   className="
-    mt-2
-    border
-    border-red-500
-    text-red-400
-    px-2
-    py-1
-    rounded
-  "
+  mt-2
+  px-3
+  py-2
+  bg-rose-800
+  hover:bg-rose-900
+  text-white
+  font-bold
+  rounded-lg
+"
 >
   Undo Draft Pick
 </button>
@@ -371,6 +399,85 @@ loadData();
         })}
 
       </div>
+
+{showUndoModal && (
+
+  <div className="fixed inset-0 bg-black/80 flex items-center justify-center">
+
+    <div className="bg-black text-white p-6 rounded-lg w-96 border border-red-700">
+
+      <h2 className="text-2xl font-bold text-red-400 mb-4">
+        Undo Draft Pick
+      </h2>
+
+      <div className="space-y-2 mb-6">
+
+        <div>
+          Player:
+          {" "}
+          {selectedPick?.playerName}
+        </div>
+
+        <div>
+          Team:
+          {" "}
+          {selectedPick?.teamName}
+        </div>
+
+        <div>
+  Cost:
+  {" "}
+  ${selectedPick?.cost}
+</div>
+
+      </div>
+
+      <p className="text-gray-300 mb-6">
+        This will remove the draft pick and return the player to the available player pool.
+      </p>
+
+      <div className="flex gap-3">
+
+        <button
+          onClick={confirmUndo}
+          className="
+            px-4
+            py-2
+            bg-red-800
+            hover:bg-red-900
+            text-white
+            font-bold
+            rounded-lg
+          "
+        >
+          Confirm Undo
+        </button>
+
+        <button
+          onClick={() => {
+            setShowUndoModal(false);
+            setSelectedPick(null);
+          }}
+          className="
+            px-4
+            py-2
+            bg-slate-700
+            hover:bg-slate-800
+            text-white
+            font-bold
+            rounded-lg
+          "
+        >
+          Cancel
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
 
     </main>
   );

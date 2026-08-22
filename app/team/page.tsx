@@ -289,6 +289,7 @@ return (
       (pick) =>
         pick.team_id === team.id
     )
+    .sort((a,b) =>a.id - b.id)
     .map((pick) => {
       const player = players.find(
         (p) => p.id === pick.player_id
