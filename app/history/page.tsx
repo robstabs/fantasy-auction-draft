@@ -15,6 +15,7 @@ type DraftPick = {
 type Player = {
   id: number;
   player_name: string;
+  position: string;
 };
 
 type Team = {
@@ -95,6 +96,87 @@ export default function HistoryPage() {
     );
   }
 
+function exportLeague() {
+
+  const rows: string[] = [];
+
+  teams.forEach((team) => {
+
+    rows.push(
+      `TEAM: ${team.name}`
+    );
+
+    rows.push(
+      "Position,Player,Cost"
+    );
+
+    let teamTotal = 0;
+
+    draftPicks
+      .filter(
+        (pick) =>
+          pick.team_id === team.id
+      )
+      .forEach((pick) => {
+
+        const player =
+          players.find(
+            (p) =>
+              p.id === pick.player_id
+          );
+
+        rows.push(
+          [
+            player?.position || "",
+            player?.player_name || "",
+            pick.cost
+          ].join(",")
+        );
+
+        teamTotal += pick.cost;
+
+      });
+
+    rows.push(
+      `TEAM TOTAL,,${teamTotal}`
+    );
+
+    rows.push("");
+
+  });
+
+  const csvContent =
+    rows.join("\n");
+
+  const blob =
+    new Blob(
+      [csvContent],
+      {
+        type: "text/csv"
+      }
+    );
+
+  const url =
+    URL.createObjectURL(
+      blob
+    );
+
+  const link =
+    document.createElement("a");
+
+  link.href = url;
+
+  link.download =
+    "final-rosters.csv";
+
+  link.click();
+
+  URL.revokeObjectURL(
+    url
+  );
+
+}
+
   return (
      <main className="p-8">
 
@@ -138,6 +220,21 @@ export default function HistoryPage() {
 
 </div>
 
+<button
+  onClick={exportLeague}
+  className="
+    mb-6
+    px-4
+    py-2
+    bg-emerald-800
+    hover:bg-emerald-900
+    text-white
+    font-bold
+    rounded-lg
+  "
+>
+  Export League
+</button>
   
 
       <div className="space-y-3">
