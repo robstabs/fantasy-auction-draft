@@ -100,7 +100,7 @@ async function loadData() {
 }
 
 return (
-   <main className="p-8">
+   <main className="min-h-screen p-8 bg-black text-white">
 
     <h1 className="text-4xl font-bold mb-6">
   Dashboard

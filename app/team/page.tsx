@@ -116,7 +116,7 @@ async function loadData() {
 
 }
 return (
-  <main className="p-8">
+  <main className="p-8 bg-black text-white">
 
     <h1 className="text-4xl font-bold mb-6">
       Teams
@@ -396,7 +396,7 @@ const starterFlex1 =
   return (
   <>
 
-    <div className="border border-gray-700 rounded-lg p-4 mb-4 bg-gray-900">
+    <div className="border border-gray-700 rounded-lg p-4 mb-4 bg-gray-900 text-white">
 
       <h3 className="font-bold mb-2">
         Starting Lineup
